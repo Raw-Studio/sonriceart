@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://bootswatch.com/4/sketchy/bootstrap.min.css">
+    <!-- Main Quill library -->
+    <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <!-- Theme included stylesheets -->
+    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'gilroymedium';
+            src: url('https://res.cloudinary.com/dnndch4fo/raw/upload/v1596797517/sonriceart/fonts/gilroy-medium1_0-webfont_corzdq_xlrdfj.woff2') format('woff2'),
+                url('https://res.cloudinary.com/dnndch4fo/raw/upload/v1596797374/sonriceart/fonts/GILROY-LIGHT1_0_obpf7a.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'gilroylight';
+            src: url('https://res.cloudinary.com/dnndch4fo/raw/upload/v1596797375/sonriceart/fonts/GILROY-LIGHT1_0_wwsj63.woff2') format('woff2'),
+                url('https://res.cloudinary.com/dnndch4fo/raw/upload/v1596797374/sonriceart/fonts/GILROY-LIGHT1_0_obpf7a.woff') format('woff');
+            font-weight: light;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'gilroyregular';
+            src:
+                url('https://res.cloudinary.com/dnndch4fo/raw/upload/v1596797827/sonriceart/fonts/GILROY-REGULAR10_l4o431.woff2') format('woff2'),
+                url('https://res.cloudinary.com/dnndch4fo/raw/upload/v1596797375/sonriceart/fonts/GILROY-REGULAR1_0_kqbhr1.woff') format('woff'),
+                url('https://res.cloudinary.com/dnndch4fo/raw/upload/v1596797835/sonriceart/fonts/GILROY-REGULAR10_ptgqrp.eot') format('eot');
+
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* Set default font-family */
+        #container {
+            font-family: "gilroyregular";
+            font-size: 18px;
+            height: 375px;
+        }
+
+        #container #toolbar-container.ql-toolbar {
+            padding: 10px;
+        }
+
+        .ql-snow .ql-picker.ql-font,
+        .ql-bubble .ql-picker.ql-font {
+            width: 130px;
+        }
+
+        /* Set dropdown font-families */
+        .ql-font span[data-value="gilroyregular"]::before,
+        .ql-font span[data-label="Gilroy Regular"]::before {
+            font-family: "gilroyregular";
+        }
+
+        .ql-font span[data-value="gilroymedium"]::before,
+        .ql-font span[data-label="Gilroy Medium"]::before {
+            font-family: "gilroymedium";
+        }
+
+        .ql-font span[data-value="gilroylight"]::before,
+        .ql-font span[data-label="Gilroy Light"]::before {
+            font-family: "gilroylight";
+        }
+
+        .ql-font-gilroy-regular {
+            font-family: 'gilroyregular';
+        }
+
+        .ql-font-gilroy-medium {
+            font-family: 'gilroymedium';
+        }
+
+        .ql-font-gilroy-light {
+            font-family: 'gilroylight';
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <a href="/admin/artworks"><button type="button" class="btn btn-primary btn-lg mb-5 mt-5"> Back to
+                        Artworks list</button></a>
+                <form method="POST" action="/admin/artworks/<%= method %>" enctype="multipart/form-data"
+                    id="artworkForm">
+                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                    <% if(item !== ''){ %>
+                    <input type="hidden" name="_id" value="<%= item._id %>">
+                    <% } %>
+                    <fieldset>
+                        <% if(item === ''){ %>
+                        <div class="form-group">
+                            <label for="title" class="col-sm-2 col-form-label">Title</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="title" class="form-control-plaintext" id="title"
+                                    placeholder="Title">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="order" class="col-sm-2 col-form-label">Order</label>
+                            <div class="col-sm-10">
+                                <input type="number" name="order" class="form-control-plaintext" id="order"
+                                    placeholder="Order">
+                            </div>
+                        </div>
+                        <% } else{ %>
+                        <form method="POST" action="/admin/artworks/add" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="title" class="col-sm-2 col-form-label">Title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="title" class="form-control-plaintext" id="title"
+                                        placeholder="Title" value="<%= item.title %>">
+                                </div>
+                            </div>
+                            <% } %>
+                            <div class="form-group">
+                                <label for="exampleSelect1">Album</label>
+                                <select class="form-control" id="exampleSelect1" name="album">
+                                    <option value="Illustration - Concept">Illustration - Concept</option>
+                                    <option value="3D Modeling">3D Modeling</option>
+                                    <option value="Animation">Animation</option>
+                                </select>
+                            </div>
+                            <% if(item === ''){ %>
+                            <div class="form-group">
+                                <label for="detail">Detail</label>
+                                <textarea class="form-control" id="detail" rows="3" name="detail"
+                                    form="artworkForm"></textarea>
+                            </div>
+                            <% }else{ %>
+                            <div class="form-group">
+                                <label for="detail">Detail</label>
+                                <textarea class="form-control" id="detail" rows="3" name="detail"
+                                    form="artworkForm"><%= item.detail %></textarea>
+                            </div>
+                            <% } %>
+
+                            <% if(item !== ''){ %>
+                            <img style="height: 200px; display: block;" src="<%= item.coverImage %>" alt="Card image">
+                            <% } %>
+                            <div class="form-group">
+                                <label for="exampleInputFile">Cover image</label>
+                                <input type="file" class="form-control-file" id="exampleInputFile"
+                                    aria-describedby="fileHelp" name="cover">
+                                <small id="fileHelp" class="form-text text-muted">This is some placeholder
+                                    block-level help text for
+                                    the above input. It's a bit lighter and easily wraps to a new line.</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h1>This is an editor</h1>
+                <div id="toolbar-container">
+                    <select class="ql-line-height">
+                        <option value="1em">1</option>
+                        <option value="1.1em">1.1</option>
+                        <option value="1.2em">1.2</option>
+                        <option value="1.3em">1.3</option>
+                        <option value="1.4em">1.4</option>
+                        <option value="1.5em">1.5</option>
+                        <option value="1.6em">1.6</option>
+                    </select>
+                    <select class="ql-font">
+                        <option value="gilroy-regular" selected>Gilroy Regular</option>
+                        <option value="gilroy-medium">Gilroy Medium</option>
+                        <option value="gilroy-light">Gilroy Light</option>
+                    </select>
+                    <select class="ql-header">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option selected></option>
+                    </select>
+                    <!-- Add font size dropdown -->
+                    <select class="ql-size">
+                        <option value="small"></option>
+                        <!-- Note a missing, thus falsy value, is used to reset to default -->
+                        <option selected></option>
+                        <option value="large"></option>
+                        <option value="huge"></option>
+                    </select>
+                    <!-- Add a bold button -->
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                    <button class="ql-link"></button>
+                    <button class="ql-image"></button>
+                    <button class="ql-video"></button>
+                    <span class="ql-formats">
+                        <button class="ql-align" value=""></button>
+                        <button class="ql-align" value="center"></button>
+                        <button class="ql-align" value="right"></button>
+                        <button class="ql-align" value="justify"></button>
+                    </span> </div>
+                <div id="container"></div>
+                <button id="saveDelta">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.clear()
+        var FontAttributor = Quill.import('formats/font');
+        var fonts = ['gilroy-regular', 'gilroy-medium', 'gilroy-light'];
+        var lHeights = ['1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6'];
+        FontAttributor.whitelist = fonts;
+        Quill.register(FontAttributor, true);
+
+        var quill = new Quill('#container', {
+            modules: {
+                toolbar: { container: "#toolbar-container" }
+            },
+            placeholder: 'Type something here',
+            theme: 'snow'  // 'snow' or 'bubble'
+        });
+
+
+        console.log(document.querySelector('#detail').value);
+        if (document.querySelector('#detail').value.trim() !== '') {
+            quill.root.innerHTML = document.querySelector('#detail').value
+        }
+
+        document.querySelector('#saveDelta').addEventListener('click', () => {
+            var delta = quill.root.innerHTML;
+            document.querySelector('#detail').value = delta;
+        })
+
+
+        // Check for unsaved data
+        window.onbeforeunload = function () {
+            if (change.length() > 0) {
+                return 'There are unsaved changes. Are you sure you want to leave?';
+            }
+        }
+    </script>
+</body>
+
+</html>

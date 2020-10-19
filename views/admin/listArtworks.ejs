@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://bootswatch.com/4/sketchy/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <a href="/admin/dashboard"><button type="button" class="btn btn-primary btn-lg mb-5">Back to
+                    Dashboard</button></a>
+            <a href="/admin/artworks/add"><button type="button" class="btn btn-primary btn-lg mb-5"> +
+                    Artwork</button></a>
+            <a href="/admin/artworks/order/illustration_concept"><button type="button"
+                    class="btn btn-primary btn-lg mb-5">Order Illustration - Concept</button></a>
+            <a href="/admin/artworks/order/3dmodeling"><button type="button" class="btn btn-primary btn-lg mb-5">Order
+                    3D Modeling</button></a>
+            <a href="/admin/artworks/order/animation"><button type="button" class="btn btn-primary btn-lg mb-5">Order
+                    Animation</button></a>
+            <div class="row">
+                <% items.forEach(function(item){ %>
+                <div class="col-md-4 box">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="<%= item.coverImage %>" alt="cover image" style="height: 225px;" />
+                        <div class="card-body">
+                            <p class="card-text">Title: <%= item.title %><br /> Album: <%= item.album %><br />
+                                Order: <%= item.order %><br /> </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="/admin/artworks/edit/<%= item._id %>"><button type="button"
+                                            class="btn btn-sm btn-outline-secondary">Edit</button></a>
+                                    <a href="/admin/artworks/delete/<%= item._id %>"><button type="button"
+                                            class="btn btn-sm btn-outline-secondary">Delete</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+</body>
+
+</html>
